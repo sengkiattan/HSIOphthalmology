@@ -15,43 +15,43 @@ class ClinicsTableSeeder extends Seeder
         $sample_clinics = [
             [
                 'clinic_no' => '54',
-                'name' => 'Vision Checking Room',
+                'name' => 'Vision Checking',
             ],
             [
                 'clinic_no' => '55',
-                'name' => 'Doctor Consultation Room',
+                'name' => 'Doctor Consultation',
             ],
             [
                 'clinic_no' => '56',
-                'name' => 'Doctor Consultation Room',
+                'name' => 'Doctor Consultation',
             ],
             [
                 'clinic_no' => '57',
-                'name' => 'Doctor Consultation Room',
+                'name' => 'Doctor Consultation',
             ],
             [
                 'clinic_no' => '58',
-                'name' => 'Doctor Consultation Room',
+                'name' => 'Doctor Consultation',
             ],
             [
                 'clinic_no' => '59',
-                'name' => 'Doctor Consultation Room',
+                'name' => 'Doctor Consultation',
             ],
             [
                 'clinic_no' => 'A',
-                'name' => 'Power Checking Room',
+                'name' => 'Power Checking',
             ],
             [
                 'clinic_no' => 'B',
-                'name' => 'Power Checking Room',
+                'name' => 'Power Checking',
             ],
             [
                 'clinic_no' => 'C',
-                'name' => 'Power Checking Room',
+                'name' => 'Power Checking',
             ],
             [
                 'clinic_no' => 'D',
-                'name' => 'Power Checking Room',
+                'name' => 'Power Checking',
             ],
         ];
 

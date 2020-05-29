@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    @include('modal')
+    @include('transferPatientModal')
     @if (Session::has('message'))
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -37,25 +37,10 @@
         </div>
 
         <div class="row justify-content-center mt-4">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header" style="border-bottom: 0px; background-color: transparent;">
-                        <div class="row">
-                            <div class="col-md-6 text-center" style="display: flex; align-items: center; justify-content: center;">
-                                <span>Current Queue Number : {{ $serving_queue_no }}</span>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                @if ($serving_queue_no == "N/A")
-                                    <a href="javascript:;" data-toggle="modal" onclick="startNewPatient({{ $clinic['id'] }})" data-target="#nextPatient" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white; margin-left: 5px;">
-                                        <i class="fas fa-play"></i> Serve First Number
-                                    </a>
-                                @else
-
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-12 text-right">
+                <a href="{{ route('nextPatient', ['clinic_id' => $clinic['id']]) }}" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: #F16C0F; color: white;">
+                    <i class="fas fa-angle-right"></i> Next Queue Number
+                </a>
             </div>
         </div>
 
@@ -63,8 +48,9 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Queue No.</th>
+                        <th scope="col" style="width: 20%">#</th>
+                        <th scope="col" style="width: 20%">Queue No.</th>
+                        <th scope="col" style="width: 60%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,11 +58,30 @@
                         <tr>
                             <th class="align-middle" scope="row">{{ $loop->iteration }}</th>
                             <td class="align-middle">{{ $queue["queue_no"] }}</td>
+                            <td class="text-right">
+                                @if ($queue['is_served'])
+                                    <a href="javascript:;" class="btn btn-default disabled" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
+                                        <i class="fas fa-play"></i> Now Serving
+                                    </a>
+                                @else
+                                    <a href="{{ route('nextSpecificPatient', ['queue_id' => $queue['id'], 'clinic_id' => $clinic['id']]) }}" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
+                                        <i class="fas fa-play"></i> Serve Now
+                                    </a>
+                                @endif
+
+                                <a href="javascript:;" data-toggle="modal" onclick="transferPatient({{ $queue['id'] }})" data-target="#transferPatientModal" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
+                                    <i class="fas fa-exchange-alt"></i> Transfer
+                                </a>
+                                <a href="{{ route('completePatient', ['queue_id' => $queue['id'], 'clinic_id' => $clinic['id']]) }}" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
+                                    <i class="fas fa-flag-checkered"></i> Done
+                                </a>
+                                    
+                            </td>
                         </tr>
                     @endforeach
                     @if (count($queues) == 0)
                     <tr>
-                        <td colspan="2" class="text-center">No record found</td>
+                        <td colspan="3" class="text-center">No record found</td>
                     </tr>
                     @endif
                 </tbody>
@@ -105,3 +110,18 @@
     @endif
 </div>
 @endsection
+
+<script type="text/javascript">
+    function transferPatient(id)
+    {
+        var id = id;
+        var url = '{{ route("transferPatient", ":id") }}';
+        url = url.replace(':id', id);
+        $("#transferPatientForm").attr('action', url);
+    }
+
+    function transferPatientSubmit()
+    {
+        $("#transferPatientForm").submit();
+    }
+</script>

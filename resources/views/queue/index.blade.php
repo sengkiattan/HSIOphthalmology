@@ -22,6 +22,7 @@
         <form method="post" action="{{ route('searchQueue') }}">
             <div class="row justify-content-center mt-4">
                 <div class="col-md-12 text-center">
+                    @csrf
                     <input type="hidden" id="search_queue" name="search_queue" value="{{ $queue_no }}"/>
                     <button type="submit" style="padding: .75rem 1.25rem; border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
                         TAP TO UPDATE <i class="fas fa-redo"></i>
@@ -38,9 +39,9 @@
                                 <p>
                                     <span style="font-size: smaller;">Current Queue Status for</span>
                                     <br/>
-                                    <span style="font-size: large; font-weight: bold">Doctor Consultation</span>
+                                    <span style="font-size: large; font-weight: bold">{{ $clinic->name }}</span>
                                     <br/>
-                                    <span style="font-size: smaller;">Clinic Number</span> <span style="font-size: larger; font-weight: bold">{{ $your_queue->clinic_no }}</span>
+                                    <span style="font-size: smaller;">Clinic Number</span> <span style="font-size: larger; font-weight: bold">{{ $clinic->clinic_no }}</span>
                                 </p>
                             </div>
                             <div class="col-md-6 text-center" style="background-color: #FFDFC0; border: solid white 5px;">

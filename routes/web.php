@@ -25,6 +25,12 @@ Route::middleware('auth')->group( function () {
     Route::get('/clinic/{clinic_no}', 'Web\ClinicController@clinic')->name('clinic');
     Route::get('/addQueue', 'Web\QueueController@addQueue')->name('addQueue');
     Route::post('/addQueue', 'Web\QueueController@storeQueue')->name('storeQueue');
+    Route::get('/nextPatient/{clinic_id}', 'Web\QueueController@nextPatient')->name('nextPatient');
+    Route::get('/nextSpecificPatient/{queue_id}/{clinic_id}', 'Web\QueueController@nextSpecificPatient')->name('nextSpecificPatient');
+    Route::get('/completePatient/{queue_id}/{clinic_id}', 'Web\QueueController@completePatient')->name('completePatient');
+    Route::post('/transferPatient/{queue_id}', 'Web\QueueController@transferPatient')->name('transferPatient');
+    
+
     Route::get('/clinicManagement', 'Web\ClinicController@clinicManagement')->name('clinicManagement');
     Route::get('/clinicManagement/addClinic', 'Web\ClinicController@addClinic')->name('addClinic');
     Route::post('/clinicManagement/addClinic', 'Web\ClinicController@storeClinic')->name('storeClinic');

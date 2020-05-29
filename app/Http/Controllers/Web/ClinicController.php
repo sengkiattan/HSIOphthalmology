@@ -32,19 +32,13 @@ class ClinicController extends Controller
     {
         $clinic = Clinic::where('clinic_no', $clinic_no)->first();
         $queues = [];
-        $serving_queue_no = "N/A";
+        $clinics = Clinic::where('clinic_no', '!=', $clinic_no)->get();
 
         if ($clinic) {
-            $queues = Queue::where('clinic_id', $clinic->id)->whereDate('created_at', Carbon::today())->where('is_served', false)->get();
-
-            $serving_queue = Queue::where('clinic_id', $clinic->id)->whereDate('created_at', Carbon::today())->where('is_served', true)->orderBy('created_at', 'DESC')->first();
-            
-            if ($serving_queue) {
-                $serving_queue_no = $serving_queue->queue_no;
-            }
+            $queues = Queue::where('clinic_id', $clinic->id)->whereDate('created_at', Carbon::today())->where('is_completed', false)->get();
         }
 
-        return view('clinicQueue', compact('clinic', 'queues', 'serving_queue_no'));
+        return view('clinicQueue', compact('clinic', 'queues', 'clinics'));
     }
 
     /**

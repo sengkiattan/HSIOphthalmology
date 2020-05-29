@@ -131,4 +131,83 @@ class QueueController extends Controller
         Session::flash('error', 'Unable to delete queue! Pleae contact administrator.');
         return Redirect::to('queueManagement');
     }
+
+    public function nextPatient($clinic_id)
+    {
+        $queue = Queue::where('clinic_id', $clinic_id)->whereDate('created_at', Carbon::today())->where('is_served', 0)->first();
+        $clinic = Clinic::find($clinic_id);
+
+        if ($queue) {
+            $queue->is_served = true;
+            $queue->save(); 
+        } else {
+            // redirect
+            Session::flash('error', 'Unable to find queue, please contact administrator.');
+            return Redirect::to('clinic/' . $clinic->clinic_no);
+        }
+        
+
+        // redirect
+        Session::flash('message', 'Successfully call next Queue Number: ' . $queue->queue_no . '!');
+        return Redirect::to('clinic/' . $clinic->clinic_no);
+    }
+
+    public function nextSpecificPatient($queue_id, $clinic_id)
+    {
+        $queue = Queue::find($queue_id);
+        $clinic = Clinic::find($clinic_id);
+
+        if ($queue) {
+            $queue->is_served = true;
+            $queue->save(); 
+        } else {
+            // redirect
+            Session::flash('error', 'Unable to find queue, please contact administrator.');
+            return Redirect::to('clinic/' . $clinic->clinic_no);
+        }
+        
+        // redirect
+        Session::flash('message', 'Successfully call Queue Number: ' . $queue->queue_no . '!');
+        return Redirect::to('clinic/' . $clinic->clinic_no);
+    }
+
+    public function completePatient($queue_id, $clinic_id)
+    {
+        $queue = Queue::find($queue_id);
+        $clinic = Clinic::find($clinic_id);
+
+        if ($queue) {
+            $queue->is_completed = true;
+            $queue->save(); 
+        } else {
+            // redirect
+            Session::flash('error', 'Unable to find queue, please contact administrator.');
+            return Redirect::to('clinic/' . $clinic->clinic_no);
+        }
+        
+        // redirect
+        Session::flash('message', 'Successfully completed Queue Number: ' . $queue->queue_no . '!');
+        return Redirect::to('clinic/' . $clinic->clinic_no);
+    }
+
+    public function transferPatient(Request $request, $queue_id)
+    {
+        $queue = Queue::find($queue_id);
+        $clinic = Clinic::find($request->current_clinic_id);
+        $transferred_clinic = Clinic::find($request->clinic_id);
+
+        if ($queue) {
+            $queue->is_served = false;
+            $queue->clinic_id = $request->clinic_id;
+            $queue->save(); 
+        } else {
+            // redirect
+            Session::flash('error', 'Unable to find queue, please contact administrator.');
+            return Redirect::to('clinic/' . $clinic->clinic_no);
+        }
+        
+        // redirect
+        Session::flash('message', 'Successfully transfer Queue Number: ' . $queue->queue_no . ' to Clinic Number: ' . $transferred_clinic->clinic_no . '!');
+        return Redirect::to('clinic/' . $clinic->clinic_no);
+    }
 }
