@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Clinic;
+use Validator;
+use Session;
+use Redirect;
 
 class HomeController extends Controller
 {
@@ -23,6 +27,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $clinics = Clinic::all();
+        // dd($clinics);
+        return view('home', compact('clinics'));
     }
 }

@@ -17,5 +17,19 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::post('/queueSearch', 'API\QueueController@searchQueue')->name('searchQueue');
+// Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/queueSearch', 'Web\HomeController@searchQueue')->name('searchQueue');
+
+Route::middleware('auth')->group( function () {
+    Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+    Route::get('/clinic/{clinic_no}', 'Web\ClinicController@clinic')->name('clinic');
+    Route::get('/addQueue', 'Web\QueueController@addQueue')->name('addQueue');
+    Route::post('/addQueue', 'Web\QueueController@storeQueue')->name('storeQueue');
+    Route::get('/clinicManagement', 'Web\ClinicController@clinicManagement')->name('clinicManagement');
+    Route::get('/clinicManagement/addClinic', 'Web\ClinicController@addClinic')->name('addClinic');
+    Route::post('/clinicManagement/addClinic', 'Web\ClinicController@storeClinic')->name('storeClinic');
+    Route::get('/clinicManagement/editClinic/{id}', 'Web\ClinicController@editClinic')->name('editClinic');
+    Route::post('/clinicManagement/editClinic/{id}', 'Web\ClinicController@updateClinic')->name('updateClinic');
+    Route::delete('/clinicManagement/deleteClinic/{id}', 'Web\ClinicController@deleteClinic')->name('deleteClinic');
+    
+});

@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Queue extends Model
 {
-    protected $fillable = ['queue_no', 'clinic_no'];
+    protected $fillable = ['queue_no', 'clinic_id'];
+
+    
 }

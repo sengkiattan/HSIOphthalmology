@@ -9,6 +9,7 @@
 
                 <div class="card-body">
                     <form method="post" action="{{ route('searchQueue') }}">
+                        @csrf
                         <div class="form-group row">
                             <label for="search_queue" class="col-md-4 col-form-label text-md-right">{{ __('Queue Number') }}</label>
 

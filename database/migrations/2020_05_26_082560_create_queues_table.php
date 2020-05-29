@@ -16,9 +16,13 @@ class CreateQueuesTable extends Migration
         Schema::create('queues', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('queue_no');
-            $table->integer('clinic_no');
+            $table->integer('clinic_id')->unsigned();
+            $table->foreign('clinic_id')->references('id')->on('clinics');
             $table->boolean('is_served')->default(0);
+            $table->boolean('is_priority')->default(0);
+            $table->boolean('is_completed')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +33,11 @@ class CreateQueuesTable extends Migration
      */
     public function down()
     {
+        Schema::table('queues', function(Blueprint $table)
+        {
+            $table->dropForeign('queues_clinic_id_foreign');
+        });
+        
         Schema::dropIfExists('queues');
     }
 }
