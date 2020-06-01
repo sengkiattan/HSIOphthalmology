@@ -15,7 +15,6 @@
 
                             <div class="col-md-6">
                                 <input id="search_queue" type="search_queue" class="form-control{{ $errors->has('search_queue') ? ' is-invalid' : '' }}" name="search_queue" value="{{ old('search_queue') }}" required autofocus>
-                                <input id="device_token" type="hidden" name="device_token"/>
                                 @if ($errors->has('search_queue'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('search_queue') }}</strong>
@@ -37,53 +36,3 @@
     </div>
 </div>
 @endsection
-
-<script
-src="https://code.jquery.com/jquery-3.4.1.min.js"
-integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-crossorigin="anonymous"></script>
-<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-messaging.js"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    });
-  }
-</script>
-<script>
-    $(document).ready(function(){
-        const config = {
-            apiKey: "AIzaSyBlC6ciDj7wBbL3MTauSDpZkapAWVo4A0M",
-            authDomain: "push-notification-test-f9fae.firebaseapp.com",
-            databaseURL: "https://push-notification-test-f9fae.firebaseio.com",
-            projectId: "push-notification-test-f9fae",
-            storageBucket: "push-notification-test-f9fae.appspot.com",
-            messagingSenderId: "554109460607",
-            appId: "1:554109460607:web:5e1b60999b312c9da95f4a"
-        };
-        firebase.initializeApp(config);
-        const messaging = firebase.messaging();
-        
-        messaging
-            .requestPermission()
-            .then(function () {
-                return messaging.getToken()
-            })
-            .then(function(token) {
-                $('input#device_token').val(token);
-            })
-            .catch(function (err) {
-                console.log("Unable to get permission to notify.", err);
-            });
-    
-        messaging.onMessage(function(payload) {
-            const noteTitle = payload.notification.title;
-            const noteOptions = {
-                body: payload.notification.body,
-                icon: payload.notification.icon,
-            };
-            new Notification(noteTitle, noteOptions);
-        });
-    });
-</script>

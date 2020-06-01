@@ -29,11 +29,6 @@
                     Clinic {{ $clinic["clinic_no"] }} - {{ $clinic["name"] }}
                 </span>
             </div>
-            <!-- <div class="col-md-8 text-right">
-                <a href="{{ route('addClinic') }}" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
-                    <i class="fas fa-plus"></i> Add New Clinic 
-                </a>
-            </div> -->
         </div>
 
         <div class="row justify-content-center mt-4">
