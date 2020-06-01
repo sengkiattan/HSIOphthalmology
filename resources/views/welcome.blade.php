@@ -15,7 +15,7 @@
 
                             <div class="col-md-6">
                                 <input id="search_queue" type="search_queue" class="form-control{{ $errors->has('search_queue') ? ' is-invalid' : '' }}" name="search_queue" value="{{ old('search_queue') }}" required autofocus>
-
+                                <input id="device_token" type="hidden" name="device_token"/>
                                 @if ($errors->has('search_queue'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('search_queue') }}</strong>
@@ -42,7 +42,8 @@
 src="https://code.jquery.com/jquery-3.4.1.min.js"
 integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 crossorigin="anonymous"></script>
-<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-messaging.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -70,27 +71,7 @@ crossorigin="anonymous"></script>
                 return messaging.getToken()
             })
             .then(function(token) {
-                console.log(token);
-                // $.ajaxSetup({
-                //     headers: {
-                //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                //     }
-                // });
-                // $.ajax({
-                //     url: '{{ URL::to('/save-device-token') }}',
-                //     type: 'POST',
-                //     data: {
-                //         user_id: {!! json_encode($user_id ?? '') !!},
-                //         fcm_token: token
-                //     },
-                //     dataType: 'JSON',
-                //     success: function (response) {
-                //         console.log(response)
-                //     },
-                //     error: function (err) {
-                //         console.log(" Can't do because: " + err);
-                //     },
-                // });
+                $('input#device_token').val(token);
             })
             .catch(function (err) {
                 console.log("Unable to get permission to notify.", err);
