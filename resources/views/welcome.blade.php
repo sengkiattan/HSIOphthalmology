@@ -37,3 +37,72 @@
     </div>
 </div>
 @endsection
+
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    });
+  }
+</script>
+<script>
+    $(document).ready(function(){
+        const config = {
+            apiKey: "AIzaSyBlC6ciDj7wBbL3MTauSDpZkapAWVo4A0M",
+            authDomain: "push-notification-test-f9fae.firebaseapp.com",
+            databaseURL: "https://push-notification-test-f9fae.firebaseio.com",
+            projectId: "push-notification-test-f9fae",
+            storageBucket: "push-notification-test-f9fae.appspot.com",
+            messagingSenderId: "554109460607",
+            appId: "1:554109460607:web:5e1b60999b312c9da95f4a"
+        };
+        firebase.initializeApp(config);
+        const messaging = firebase.messaging();
+        
+        messaging
+            .requestPermission()
+            .then(function () {
+                return messaging.getToken()
+            })
+            .then(function(token) {
+                console.log(token);
+                // $.ajaxSetup({
+                //     headers: {
+                //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                //     }
+                // });
+                // $.ajax({
+                //     url: '{{ URL::to('/save-device-token') }}',
+                //     type: 'POST',
+                //     data: {
+                //         user_id: {!! json_encode($user_id ?? '') !!},
+                //         fcm_token: token
+                //     },
+                //     dataType: 'JSON',
+                //     success: function (response) {
+                //         console.log(response)
+                //     },
+                //     error: function (err) {
+                //         console.log(" Can't do because: " + err);
+                //     },
+                // });
+            })
+            .catch(function (err) {
+                console.log("Unable to get permission to notify.", err);
+            });
+    
+        messaging.onMessage(function(payload) {
+            const noteTitle = payload.notification.title;
+            const noteOptions = {
+                body: payload.notification.body,
+                icon: payload.notification.icon,
+            };
+            new Notification(noteTitle, noteOptions);
+        });
+    });
+</script>
