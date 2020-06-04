@@ -87,5 +87,17 @@ crossorigin="anonymous"></script>
             };
             new Notification(noteTitle, noteOptions);
         });
+
+        messaging.setBackgroundMessageHandler(function(payload) {
+          // Customize notification here
+          const notificationTitle = payload.notification.title;
+          const notificationOptions = {
+            body: payload.notification.body,
+            icon: payload.notification.icon
+          };
+
+          return self.registration.showNotification(notificationTitle,
+              notificationOptions);
+        }); 
     });
 </script>
