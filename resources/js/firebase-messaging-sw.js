@@ -24,6 +24,9 @@ firebase.initializeApp({
 Retrieve an instance of Firebase Messaging so that it can handle background messages.
 */
 const messaging = firebase.messaging();
+
+messaging.usePublicVapidKey("BN1PONcnKVuW8DJkg-mP3fh9qCdCEKBzwA35mD52u_vdt2HnUNHHigSsf6R7LhCiSTrif0WRlH6dzbB-gl2OSeU");
+
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
