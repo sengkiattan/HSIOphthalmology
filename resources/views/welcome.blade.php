@@ -48,7 +48,7 @@ crossorigin="anonymous"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      navigator.serviceWorker.register('/js/firebase-messaging-sw.js');
     });
   }
 </script>
