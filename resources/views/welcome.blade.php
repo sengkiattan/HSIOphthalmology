@@ -78,8 +78,6 @@ crossorigin="anonymous"></script>
             .catch(function (err) {
                 console.log("Unable to get permission to notify.", err);
             });
-
-        messaging.usePublicVapidKey("BN1PONcnKVuW8DJkg-mP3fh9qCdCEKBzwA35mD52u_vdt2HnUNHHigSsf6R7LhCiSTrif0WRlH6dzbB-gl2OSeU");
     
         messaging.onMessage(function(payload) {
             const noteTitle = payload.notification.title;
@@ -88,19 +86,6 @@ crossorigin="anonymous"></script>
                 icon: payload.notification.icon,
             };
             new Notification(noteTitle, noteOptions);
-        });
-
-        messaging.setBackgroundMessageHandler(function(payload) {
-          console.log('[firebase-messaging-sw.js] Received background message ', payload);
-          // Customize notification here
-          const notificationTitle = 'Background Message Title';
-          const notificationOptions = {
-            body: 'Background Message body.',
-            icon: '/firebase-logo.png'
-          };
-
-          return self.registration.showNotification(notificationTitle,
-            notificationOptions);
         });
     });
 </script>
