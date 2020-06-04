@@ -1,5 +1,6 @@
 {
-    "/firebase-messaging-sw.js": "/firebase-messaging-sw.js",
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/js/firebase-messaging-sw.js": "/js/firebase-messaging-sw.js",
+    "/js/popper.js": "/js/popper.js"
 }
