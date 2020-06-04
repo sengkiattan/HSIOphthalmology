@@ -227,4 +227,7 @@ return [
 
     ],
 
+    //Firebase push notification configuration
+    'firebase_server_key' => env('FIREBASE_SERVER_KEY', 'Please setup firebase configuration in env file!'),
+
 ];

@@ -11,9 +11,12 @@ use Session;
 use Redirect;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\QueueToken;
 
 class QueueController extends Controller
 {
+    protected $serverKey;
+
     /**
      * Create a new controller instance.
      *
@@ -22,6 +25,7 @@ class QueueController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->serverKey = config('app.firebase_server_key');
     }
 
     /**
@@ -159,7 +163,10 @@ class QueueController extends Controller
 
         if ($queue) {
             $queue->is_served = true;
-            $queue->save(); 
+            $queue->save();
+
+            //Push notification
+            $this->sendMessage($queue->queue_no, $clinic->clinic_no);
         } else {
             // redirect
             Session::flash('error', 'Unable to find queue, please contact administrator.');
@@ -209,5 +216,41 @@ class QueueController extends Controller
         // redirect
         Session::flash('message', 'Successfully transfer Queue Number: ' . $queue->queue_no . ' to Clinic Number: ' . $transferred_clinic->clinic_no . '!');
         return Redirect::to('clinic/' . $clinic->clinic_no);
+    }
+
+    private function sendMessage($queue_no, $clinic_no)
+    {
+        $queue_tokens = QueueToken::where("queue_no", $queue_no)->whereDate('updated_at', Carbon::today())->get();
+
+        if ($queue_tokens) {
+            foreach ($queue_tokens as $queue_token) {
+                $data = [
+                    "to" => $queue_token->device_token,
+                    "notification" =>
+                        [
+                            "title" => 'It\'s your turn!',
+                            "body" => "Please proceed to Clinic: " . $clinic_no,
+                            "icon" => url('/logo.png')
+                        ],
+                ];
+                $dataString = json_encode($data);
+
+                $headers = [
+                    'Authorization: key=' . $this->serverKey,
+                    'Content-Type: application/json',
+                ];
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+                curl_exec($ch);
+            }
+        }
+
     }
 }
