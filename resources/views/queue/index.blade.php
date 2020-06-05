@@ -24,6 +24,7 @@
                 <div class="col-md-12 text-center">
                     @csrf
                     <input type="hidden" id="search_queue" name="search_queue" value="{{ $queue_no }}"/>
+                    <input id="device_token" type="hidden" name="device_token"/>
                     <button type="submit" style="padding: .75rem 1.25rem; border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
                         TAP TO UPDATE <i class="fas fa-redo"></i>
                     </button>
