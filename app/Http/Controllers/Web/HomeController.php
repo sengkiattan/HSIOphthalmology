@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function homePage()
     {
-        $queueUpdates = Queue::all();
+        $queueUpdates = [];
 
         return view('welcome', ['queueUpdates' => $queueUpdates]);
     }

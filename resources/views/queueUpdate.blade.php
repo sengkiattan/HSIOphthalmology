@@ -22,5 +22,4 @@
 </div>
 <script>
     window.queueUpdates = @json($queueUpdates);
-    console.log(window);
 </script>
