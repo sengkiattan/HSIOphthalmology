@@ -11,6 +11,13 @@ use App\QueueToken;
 
 class HomeController extends Controller
 {
+    public function homePage()
+    {
+        $queueUpdates = Queue::all();
+
+        return view('welcome', ['queueUpdates' => $queueUpdates]);
+    }
+
     public function searchQueue(Request $request)
     {
         $queue_no = $request->search_queue;
