@@ -5,7 +5,7 @@
 <div class="container">
     @include('queueUpdate')
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-12">
             <div class="card">
                 <div class="card-header">{{ __('Search Your Queue Number') }}</div>
 
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-5">
+                            <div class="col-12 offset-md-5">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Search') }}
                                 </button>

@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-@if($your_queue)
-    <div class="container">
+<div class="container">
+    @include('queueUpdate')
+    @if($your_queue)
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -63,9 +64,7 @@
                 </div>
             </div>
         </div>
-    </div>
-@else
-    <div class="container">
+    @else
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -103,6 +102,6 @@
                 </a>
             </div>
         </div>
-    </div>
-@endif
+    @endif
+</div>
 @endsection

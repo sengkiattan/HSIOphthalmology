@@ -31,7 +31,24 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#queueUpdatesDiv',
 
-    data: {
-        queueUpdates
-    },
+    data: function () {
+      return {
+        queueUpdates: window.queueUpdates
+      }
+    }
+
+    // data: {
+    //     queueUpdates
+    // },
 });
+
+window.Pusher = require('pusher-js');
+
+const pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER
+});
+
+pusher.subscribe(`update_queue`)
+    .bind('event', (data) => {
+        app.queueUpdates = data;
+    });

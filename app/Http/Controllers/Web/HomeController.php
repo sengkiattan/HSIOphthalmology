@@ -8,12 +8,13 @@ use App\Queue;
 use App\Clinic;
 use Carbon\Carbon;
 use App\QueueToken;
+use App\QueueUpdates;
 
 class HomeController extends Controller
 {
     public function homePage()
     {
-        $queueUpdates = [];
+        $queueUpdates = QueueUpdates::whereDate('updated_at', Carbon::today())->orderBy('updated_at', 'desc')->take(4)->get();
 
         return view('welcome', ['queueUpdates' => $queueUpdates]);
     }
@@ -21,6 +22,7 @@ class HomeController extends Controller
     public function searchQueue(Request $request)
     {
         $queue_no = $request->search_queue;
+        $queueUpdates = QueueUpdates::whereDate('updated_at', Carbon::today())->orderBy('updated_at', 'desc')->take(4)->get();
 
         $queues = [];
         $your_queue = null;
@@ -51,7 +53,7 @@ class HomeController extends Controller
             $time_now = Carbon::now()->setTimezone('Asia/Kuala_Lumpur')->format('h:i A');
         }
         
-        return view('queue.index', compact('queues', 'your_queue', 'unserved_queue', 'queue_no', 'time_now', 'clinic'));
+        return view('queue.index', compact('queues', 'your_queue', 'unserved_queue', 'queue_no', 'time_now', 'clinic', 'queueUpdates'));
     }
 
     private function updateQueueDeviceToken($queue_no, $device_token)

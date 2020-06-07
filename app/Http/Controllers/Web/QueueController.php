@@ -12,6 +12,8 @@ use Redirect;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use App\QueueToken;
+use App\QueueUpdates;
+use \Pusher\Laravel\PusherManager;
 
 class QueueController extends Controller
 {
@@ -136,7 +138,7 @@ class QueueController extends Controller
         return Redirect::to('queueManagement');
     }
 
-    public function nextPatient($clinic_id)
+    public function nextPatient($clinic_id, PusherManager $pusher)
     {
         $queue = Queue::where('clinic_id', $clinic_id)->whereDate('created_at', Carbon::today())->where('is_served', 0)->first();
         $clinic = Clinic::find($clinic_id);
@@ -144,6 +146,9 @@ class QueueController extends Controller
         if ($queue) {
             $queue->is_served = true;
             $queue->save(); 
+
+            //Update queue updates
+            $this->updateQueueUpdates($queue, $clinic, $pusher);
         } else {
             // redirect
             Session::flash('error', 'Unable to find queue, please contact administrator.');
@@ -156,7 +161,7 @@ class QueueController extends Controller
         return Redirect::to('clinic/' . $clinic->clinic_no);
     }
 
-    public function nextSpecificPatient($queue_id, $clinic_id)
+    public function nextSpecificPatient($queue_id, $clinic_id, PusherManager $pusher)
     {
         $queue = Queue::find($queue_id);
         $clinic = Clinic::find($clinic_id);
@@ -167,6 +172,9 @@ class QueueController extends Controller
 
             //Push notification
             $this->sendMessage($queue->queue_no, $clinic->clinic_no);
+
+            //Update queue updates
+            $this->updateQueueUpdates($queue, $clinic, $pusher);
         } else {
             // redirect
             Session::flash('error', 'Unable to find queue, please contact administrator.');
@@ -252,5 +260,24 @@ class QueueController extends Controller
             }
         }
 
+    }
+
+    private function updateQueueUpdates($queue, $clinic, $pusher)
+    {
+        $queueUpdate = QueueUpdates::where('queue_no', $queue->queue_no)->whereDate('updated_at', Carbon::today())->first();
+
+        if ($queueUpdate) {
+            $queueUpdate->clinic_no = $clinic->clinic_no;
+            $queueUpdate->save();
+        } else {
+            $queueUpdate = new QueueUpdates;
+            $queueUpdate->queue_no = $queue->queue_no;
+            $queueUpdate->clinic_no = $clinic->clinic_no;
+            $queueUpdate->save();
+        }
+
+        $queueUpdates = QueueUpdates::whereDate('updated_at', Carbon::today())->orderBy('updated_at', 'desc')->take(4)->get();
+
+        $pusher->trigger("update_queue", 'event', $queueUpdates, request()->header('x-socket-id'));
     }
 }

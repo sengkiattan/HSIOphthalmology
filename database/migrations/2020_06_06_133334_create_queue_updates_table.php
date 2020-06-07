@@ -15,6 +15,8 @@ class CreateQueueUpdatesTable extends Migration
     {
         Schema::create('queue_updates', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('queue_no');
+            $table->string('clinic_no');
             $table->timestamps();
         });
     }
