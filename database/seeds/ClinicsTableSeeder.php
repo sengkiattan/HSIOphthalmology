@@ -12,7 +12,17 @@ class ClinicsTableSeeder extends Seeder
      */
     public function run()
     {
+        //Clear queue tables and clinic tables first
+        DB::table('queue_tokens')->delete();
+        DB::table('queue_updates')->delete();
+        DB::table('queues')->delete();
+        DB::table('clinics')->delete();
+
         $sample_clinics = [
+            [
+                'clinic_no' => 'General',
+                'name' => 'General Room',
+            ],
             [
                 'clinic_no' => '54',
                 'name' => 'Vision Checking',

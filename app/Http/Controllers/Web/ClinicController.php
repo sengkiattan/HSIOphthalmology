@@ -33,12 +33,13 @@ class ClinicController extends Controller
         $clinic = Clinic::where('clinic_no', $clinic_no)->first();
         $queues = [];
         $clinics = Clinic::where('clinic_no', '!=', $clinic_no)->get();
+        $all_clinics = Clinic::all();
 
         if ($clinic) {
             $queues = Queue::where('clinic_id', $clinic->id)->whereDate('updated_at', Carbon::today())->where('is_completed', false)->get();
         }
 
-        return view('clinicQueue', compact('clinic', 'queues', 'clinics'));
+        return view('clinicQueue', compact('clinic', 'queues', 'clinics', 'all_clinics'));
     }
 
     /**

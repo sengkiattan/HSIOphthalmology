@@ -35,5 +35,9 @@ Route::middleware('auth')->group( function () {
     Route::get('/clinicManagement/editClinic/{id}', 'Web\ClinicController@editClinic')->name('editClinic');
     Route::post('/clinicManagement/editClinic/{id}', 'Web\ClinicController@updateClinic')->name('updateClinic');
     Route::delete('/clinicManagement/deleteClinic/{id}', 'Web\ClinicController@deleteClinic')->name('deleteClinic');
+
+    Route::post('/storeQueueClinic/{clinic_id}', 'Web\QueueController@storeQueueClinic')->name('storeQueueClinic');
+    Route::post('/transferQueueClinic/{clinic_id}', 'Web\QueueController@transferQueueClinic')->name('transferQueueClinic');
+    Route::post('/callQueueClinic/{clinic_id}', 'Web\QueueController@callQueueClinic')->name('callQueueClinic');
     
 });

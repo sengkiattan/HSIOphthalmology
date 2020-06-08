@@ -147,6 +147,9 @@ class QueueController extends Controller
             $queue->is_served = true;
             $queue->save(); 
 
+            //Push notification
+            $this->sendMessage($queue->queue_no, $clinic->clinic_no);
+
             //Update queue updates
             $this->updateQueueUpdates($queue, $clinic, $pusher);
         } else {
@@ -279,5 +282,111 @@ class QueueController extends Controller
         $queueUpdates = QueueUpdates::whereDate('updated_at', Carbon::today())->orderBy('updated_at', 'desc')->take(4)->get();
 
         $pusher->trigger("update_queue", 'event', $queueUpdates, request()->header('x-socket-id'));
+    }
+
+    public function storeQueueClinic(Request $request, $clinic_id)
+    {
+        $input = $request->all();
+        $input['queue_no'] = $input['store_queue_no'];
+        $input['clinic_id'] = $input['store_clinic_id'];
+        $clinic = Clinic::find($clinic_id);
+
+        $rules = array(
+            'queue_no' => 'required',
+            'queue_no' => Rule::unique('queues')->where(function ($query){
+                            return $query->whereDate('created_at', Carbon::today());
+                        }),
+            'clinic_id' => 'required'
+        );
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('clinic/'.$clinic->clinic_no)
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            // store
+            $queue = Queue::create($input);
+
+            // redirect
+            Session::flash('message', 'Successfully created a new queue!');
+            return Redirect::to('clinic/'.$clinic->clinic_no);
+        }
+    }
+
+    public function transferQueueClinic(Request $request, $clinic_id)
+    {
+        $input = $request->all();
+        $input['queue_no'] = $input['transfer_queue_no'];
+        
+        $clinic = Clinic::find($clinic_id);
+
+        $rules = array(
+            'queue_no' => 'required',
+        );
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('clinic/'.$clinic->clinic_no)
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            $queue = Queue::where('queue_no', $request->transfer_queue_no)->whereDate('updated_at', Carbon::today())->first();
+            $transferred_clinic = Clinic::find($request->transfer_clinic_id);
+
+            if ($queue) {
+                $queue->is_served = false;
+                $queue->clinic_id = $request->transfer_clinic_id;
+                $queue->save(); 
+            } else {
+                // redirect
+                Session::flash('error', 'Unable to find queue, please enter the correct queue no.');
+                return Redirect::to('clinic/' . $clinic->clinic_no);
+            }
+            
+            // redirect
+            Session::flash('message', 'Successfully transfer Queue Number: ' . $queue->queue_no . ' to Clinic Number: ' . $transferred_clinic->clinic_no . '!');
+            return Redirect::to('clinic/' . $clinic->clinic_no);
+        }
+    }
+
+    public function callQueueClinic(Request $request, $clinic_id, PusherManager $pusher)
+    {
+        $input = $request->all();
+        $input['queue_no'] = $input['call_queue_no'];
+        
+        $clinic = Clinic::find($clinic_id);
+
+        $rules = array(
+            'queue_no' => 'required',
+        );
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('clinic/'.$clinic->clinic_no)
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            $queue = Queue::where('queue_no', $request->call_queue_no)->whereDate('updated_at', Carbon::today())->first();
+
+            if ($queue) {
+                $queue->is_served = true;
+                $queue->save();
+
+                //Push notification
+                $this->sendMessage($queue->queue_no, $clinic->clinic_no);
+
+                //Update queue updates
+                $this->updateQueueUpdates($queue, $clinic, $pusher);
+            } else {
+                // redirect
+                Session::flash('error', 'Unable to find queue, please contact administrator.');
+                return Redirect::to('clinic/' . $clinic->clinic_no);
+            }
+            
+            // redirect
+            Session::flash('message', 'Successfully call Queue Number: ' . $queue->queue_no . '!');
+            return Redirect::to('clinic/' . $clinic->clinic_no);
+        }
     }
 }

@@ -31,13 +31,82 @@
             </div>
         </div>
 
-        <div class="row justify-content-center mt-4">
-            <div class="col-md-12 text-right">
-                <a href="{{ route('nextPatient', ['clinic_id' => $clinic['id']]) }}" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: #F16C0F; color: white;">
-                    <i class="fas fa-angle-right"></i> Next Queue Number
-                </a>
+        <form method="post" action="{{ route('storeQueueClinic', ['clinic_id' => $clinic['id']]) }}">
+            @csrf
+            <div class="form-group row mt-4 mb-4">
+                <label for="store_queue_no" class="col-md-2 col-form-label text-md-right">{{ __('Add Queue Number:') }}</label>
+
+                <div class="col-md-2">
+                    <input id="store_queue_no" type="text" class="form-control{{ $errors->has('store_queue_no') ? ' is-invalid' : '' }}" name="store_queue_no" value="{{ old('store_queue_no') }}" placeholder="Queue No." required autofocus>
+                </div>
+
+                <div class="col-md-4">
+                    <select id="store_clinic_id" name="store_clinic_id" class="form-control{{ $errors->has('store_clinic_id') ? ' is-invalid' : '' }}" required>
+                        @foreach ($all_clinics as $store_clinic)
+                            <option value="{{ $store_clinic->id }}">{{ $store_clinic->clinic_no . " - " . $store_clinic->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Add') }}
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
+
+        <hr/>
+
+        <form method="post" action="{{ route('transferQueueClinic', ['clinic_id' => $clinic['id']]) }}">
+            @csrf
+            <div class="form-group row mt-4 mb-4">
+                <label for="transfer_queue_no" class="col-md-2 col-form-label text-md-right">{{ __('Transfer Queue Number:') }}</label>
+
+                <div class="col-md-2">
+                    <input id="transfer_queue_no" type="text" class="form-control{{ $errors->has('transfer_queue_no') ? ' is-invalid' : '' }}" name="transfer_queue_no" value="{{ old('transfer_queue_no') }}" placeholder="Queue No." required autofocus>
+                </div>
+
+                <div class="col-md-4">
+                    <select id="transfer_clinic_id" name="transfer_clinic_id" class="form-control{{ $errors->has('transfer_clinic_id') ? ' is-invalid' : '' }}" required>
+                        @foreach ($clinics as $transfer_clinic)
+                            <option value="{{ $transfer_clinic->id }}">{{ $transfer_clinic->clinic_no . " - " . $transfer_clinic->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Transfer') }}
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <hr/>
+
+        <form method="post" action="{{ route('callQueueClinic', ['clinic_id' => $clinic['id']]) }}">
+            @csrf
+            <div class="form-group row mt-4 mb-4">
+                <label for="transfer_queue_no" class="col-md-2 col-form-label text-md-right">{{ __('Call Queue Number:') }}</label>
+
+                <div class="col-md-2">
+                    <input id="call_queue_no" type="text" class="form-control{{ $errors->has('call_queue_no') ? ' is-invalid' : '' }}" name="call_queue_no" value="{{ old('call_queue_no') }}" placeholder="Queue No." required autofocus>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Call') }}
+                    </button>
+                </div>
+
+                <div class="col-md-6 text-right">
+                    <a href="{{ route('nextPatient', ['clinic_id' => $clinic['id']]) }}" class="btn btn-default" style="border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: #F16C0F; color: white;">
+                        <i class="fas fa-angle-right"></i> Call Next Queue Number
+                    </a>
+                </div>
+            </div>
+        </form>
 
         <div class="row mt-4">
             <table class="table table-striped">
