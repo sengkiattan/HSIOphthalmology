@@ -18,6 +18,9 @@ Auth::routes(['register' => false]);
 // Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/queueSearch', 'Web\HomeController@searchQueue')->name('searchQueue');
 
+//store a push subscriber.
+Route::post('/storePushQueue','PushController@store');
+
 Route::middleware('auth')->group( function () {
     Route::get('/dashboard', 'HomeController@index')->name('dashboard');
     Route::get('/clinic/{clinic_no}', 'Web\ClinicController@clinic')->name('clinic');

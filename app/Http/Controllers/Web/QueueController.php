@@ -14,6 +14,9 @@ use Carbon\Carbon;
 use App\QueueToken;
 use App\QueueUpdates;
 use \Pusher\Laravel\PusherManager;
+use App\Notifications\PushDemo;
+use Notification;
+use App\Guest;
 
 class QueueController extends Controller
 {
@@ -148,7 +151,7 @@ class QueueController extends Controller
             $queue->save(); 
 
             //Push notification
-            $this->sendMessage($queue->queue_no, $clinic->clinic_no);
+            $this->sendPushNotification($queue->queue_no, $clinic->clinic_no);
 
             //Update queue updates
             $this->updateQueueUpdates($queue, $clinic, $pusher);
@@ -174,7 +177,7 @@ class QueueController extends Controller
             $queue->save();
 
             //Push notification
-            $this->sendMessage($queue->queue_no, $clinic->clinic_no);
+            $this->sendPushNotification($queue->queue_no, $clinic->clinic_no);
 
             //Update queue updates
             $this->updateQueueUpdates($queue, $clinic, $pusher);
@@ -374,7 +377,7 @@ class QueueController extends Controller
                 $queue->save();
 
                 //Push notification
-                $this->sendMessage($queue->queue_no, $clinic->clinic_no);
+                $this->sendPushNotification($queue->queue_no, $clinic->clinic_no);
 
                 //Update queue updates
                 $this->updateQueueUpdates($queue, $clinic, $pusher);
@@ -388,5 +391,13 @@ class QueueController extends Controller
             Session::flash('message', 'Successfully call Queue Number: ' . $queue->queue_no . '!');
             return Redirect::to('clinic/' . $clinic->clinic_no);
         }
+    }
+
+    private function sendPushNotification($queue_no, $clinic_no)
+    {
+
+        $guest = Guest::where('queue_no', $queue_no)->whereDate('updated_at', Carbon::today())->get();
+        $push_message = new PushDemo('It\'s your turn!', 'Please proceed to Clinic: ' . $clinic_no);
+        Notification::send($guest, $push_message);
     }
 }

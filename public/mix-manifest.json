@@ -1,9 +1,11 @@
 {
-    "/firebase-messaging-sw.js": "/firebase-messaging-sw.js",
-    "/firebase-messaging-sw.js.map": "/firebase-messaging-sw.js.map",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/app.js.map": "/js/app.js.map",
+    "/js/enable-push.js": "/js/enable-push.js",
+    "/js/enable-push.js.map": "/js/enable-push.js.map",
     "/js/popper.js": "/js/popper.js",
-    "/js/popper.js.map": "/js/popper.js.map"
+    "/js/popper.js.map": "/js/popper.js.map",
+    "/sw.js": "/sw.js",
+    "/sw.js.map": "/sw.js.map"
 }

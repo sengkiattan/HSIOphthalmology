@@ -17,7 +17,6 @@
 
                             <div class="col-md-6">
                                 <input id="search_queue" type="search_queue" class="form-control{{ $errors->has('search_queue') ? ' is-invalid' : '' }}" name="search_queue" value="{{ old('search_queue') }}" required autofocus>
-                                <input id="device_token" type="hidden" name="device_token"/>
                                 @if ($errors->has('search_queue'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('search_queue') }}</strong>
