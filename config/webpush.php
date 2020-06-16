@@ -37,6 +37,6 @@ return [
      * This is the database connection that will be used by the migration and
      * the PushSubscription model shipped with this package.
      */
-    'database_connection' => env('WEBPUSH_DB_CONNECTION', env('DB_CONNECTION', 'mysql')),
+    'database_connection' => env('WEBPUSH_DB_CONNECTION', env('DB_CONNECTION', 'pgsql')),
 
 ];
