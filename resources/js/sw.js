@@ -16,6 +16,7 @@ self.addEventListener('push', function (e) {
 });
 
 self.addEventListener('notificationclick', function (e) {
+    e.notification.close();
     if (e.notification.actions && e.notification.actions[0].action === 'view_detail' && self.data && self.data.url) {
         self.clients.openWindow(self.data.url);
     } else {
