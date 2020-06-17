@@ -31,4 +31,9 @@ class HomeController extends Controller
         // dd($clinics);
         return view('home', compact('clinics'));
     }
+
+    public function test()
+    {
+        return $this->index();
+    }
 }

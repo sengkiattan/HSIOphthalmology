@@ -20,17 +20,14 @@
                 </div>
             </div>
         </div>
-        <form method="post" action="{{ route('searchQueue') }}">
-            <div class="row justify-content-center mt-4">
-                <div class="col-md-12 text-center">
-                    @csrf
-                    <input type="hidden" id="search_queue" name="search_queue" value="{{ $queue_no }}"/>
-                    <button type="submit" style="padding: .75rem 1.25rem; border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
-                        TAP TO UPDATE <i class="fas fa-redo"></i>
-                    </button>
-                </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-12 text-center">
+                <input type="hidden" id="search_queue" name="search_queue" value="{{ $queue_no }}"/>
+                <a href="" onclick="searchQueue()" style="padding: .75rem 1.25rem; border-radius: calc(.25rem - 1px); color: #F16C0F; border: 1px solid; background-color: white;">
+                    TAP TO UPDATE <i class="fas fa-redo"></i>
+                </a>
             </div>
-        </form>
+        </div>
         <div class="row justify-content-center mt-4">
             <div class="col-md-8">
                 <div class="card">
@@ -105,4 +102,11 @@
 </div>
 @endsection
 
+<script type="text/javascript">
+    function searchQueue()
+    {
+        let queue_no = document.getElementById('search_queue').value;
+        window.location.href = "/queueSearch/" + queue_no;
+    }
+</script>
 <script src="{{ asset('js/enable-push.js') }}" defer></script>

@@ -12,11 +12,12 @@
 */
 
 Route::get('/', 'Web\HomeController@homePage')->name('homePage');
+Route::get('/test', 'Web\HomeController@test')->name('test');
 
 Auth::routes(['register' => false]);
 
 // Route::get('/home', 'HomeController@index')->name('home');
-Route::post('/queueSearch', 'Web\HomeController@searchQueue')->name('searchQueue');
+Route::get('/queueSearch/{queue_no}', 'Web\HomeController@searchQueue')->name('searchQueue');
 
 //store a push subscriber.
 Route::post('/storePushQueue','PushController@store');

@@ -397,7 +397,7 @@ class QueueController extends Controller
     {
 
         $guest = Guest::where('queue_no', $queue_no)->whereDate('updated_at', Carbon::today())->get();
-        $push_message = new PushDemo('It\'s your turn!', 'Please proceed to Clinic: ' . $clinic_no);
+        $push_message = new PushDemo('It\'s your turn!', 'Please proceed to Clinic: ' . $clinic_no, $queue_no);
         Notification::send($guest, $push_message);
     }
 }

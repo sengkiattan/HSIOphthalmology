@@ -11,19 +11,19 @@ class PushDemo extends Notification
 {
     use Queueable;
     public $title;
-    public $icon;
     public $body;
-    public $action;
+    public $queue_no;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($title = null, $body = null)
+    public function __construct($title = null, $body = null, $queue_no = null)
     {
         $this->title = $title;
         $this->body = $body;
+        $this->queue_no = $queue_no;
     }
 
     /**
@@ -41,6 +41,8 @@ class PushDemo extends Notification
     {
         return (new WebPushMessage)
             ->title($this->title)
-            ->body($this->body);
+            ->body($this->body)
+            ->action('View Details', 'view_detail')
+            ->data(['url' => route('searchQueue', $this->queue_no)]);
     }
 }

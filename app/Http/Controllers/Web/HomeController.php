@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Web;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Queue;
 use App\Clinic;
@@ -19,9 +18,16 @@ class HomeController extends Controller
         return view('welcome', ['queueUpdates' => $queueUpdates]);
     }
 
-    public function searchQueue(Request $request)
+    public function test()
     {
-        $queue_no = $request->search_queue;
+        return $this->homePage();
+    }
+
+    public function searchQueue($queue_no)
+    {
+        if (!$queue_no) {
+            return;
+        }
         $queueUpdates = QueueUpdates::whereDate('updated_at', Carbon::today())->orderBy('updated_at', 'desc')->take(4)->get();
 
         $queues = [];
@@ -36,9 +42,6 @@ class HomeController extends Controller
                         ->first();
 
         if ($your_queue) {
-            if ($request->device_token) {
-                $this->updateQueueDeviceToken($queue_no, $request->device_token);
-            }
         	$clinic = Clinic::find($your_queue->clinic_id);
             //Get all queues belongs to the same clinic
             $queues = Queue::where('clinic_id', $your_queue->clinic_id)->whereDate('updated_at', Carbon::today())->where('is_served', false)->get();
@@ -54,23 +57,5 @@ class HomeController extends Controller
         }
         
         return view('queue.index', compact('queues', 'your_queue', 'unserved_queue', 'queue_no', 'time_now', 'clinic', 'queueUpdates'));
-    }
-
-    private function updateQueueDeviceToken($queue_no, $device_token)
-    {
-        $queue_token = QueueToken::where('device_token', $device_token)->whereDate('updated_at', Carbon::today())->first();
-
-        if ($queue_token) {
-            //Found existing token registered, update queue_no
-            $queue_token->queue_no = $queue_no;
-            $queue_token->save();
-        } else {
-            // Not found existing token, register a new device token to the queue no
-            $queue_token = new QueueToken;
-
-            $queue_token->queue_no = $queue_no;
-            $queue_token->device_token = $device_token;
-            $queue_token->save();
-        }
     }
 }
