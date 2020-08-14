@@ -25,6 +25,7 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "pusher-js": "^6.0.3"
+        "pusher-js": "^6.0.3",
+        "serialize-javascript": "^4.0.0"
     }
 }
